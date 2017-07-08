@@ -4,13 +4,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.Log;
 
 /**
  * Created by Olga-PC on 7/1/2017.
  */
 
 public class DBHelper extends SQLiteOpenHelper {
-    private final static String TAG = "DAOHelper";
+    private final static String TAG = "DBHelper";
 
     private final static int DATABASE_VERSION = 1;
     private final static String DATABASE_NAME = "bh_hostess_event.db";
@@ -21,7 +22,14 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        db.execSQL(EVENTS.TABLE_CREATE);
+        Log.d(TAG, EVENTS.TABLE_CREATE);
 
+        db.execSQL(CLIENTS.TABLE_CREATE);
+        Log.d(TAG, CLIENTS.TABLE_CREATE);
+
+        db.execSQL(USERS.TABLE_CREATE);
+        Log.d(TAG, USERS.TABLE_CREATE);
     }
 
     @Override
@@ -38,7 +46,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String NAME = "name";
         String PHONE = "phone";
         String MEMO = "memo";
-        String LAST_EVENT = "last-event";
+        String LAST_EVENT = "last_event";
 
 
         String TABLE_CREATE =
@@ -72,7 +80,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         ID + " INTEGER NOT NULL PRIMARY KEY, " +
                         NAME + " TEXT NOT NULL, " +
-                        TYPE + " INTEGER NOT NULL " +
+                        TYPE + " INTEGER NOT NULL, " +
                         USERNAME + " TEXT NOT NULL, " +
                         PASSWORD + " TEXT NOT NULL " +
                         ");";
@@ -109,14 +117,18 @@ public class DBHelper extends SQLiteOpenHelper {
                         CLIENT_PHONE + " TEXT NOT NULL, " +
                         TM_EVENT + " INTEGER NOT NULL, " +
                         TM_CREATE + " INTEGER NOT NULL, " +
-                        TM_UPDATE + " INTEGER NOT NULL " +
+                        TM_UPDATE + " INTEGER NOT NULL, " +
                         USER_ID + " INTEGER NOT NULL, " +
                         TBL + " INTEGER NOT NULL DEFAULT 0, " +
                         GUESTS + " INTEGER NOT NULL, " +
                         GUESTS_EXTRA + " INTEGER NOT NULL DEFAULT 0, " +
                         STATUS + " INTEGER NOT NULL, " +
                         MEMO + " TEXT NOT NULL " +
-                        ");";
+                        ");"+
+                        " CREATE INDEX idx_name ON " + TABLE_NAME +
+                        "(" + TM_EVENT + ");"+
+                        " CREATE INDEX idx_name ON " + TABLE_NAME +
+                        "(" + CLIENT_ID + ");";
         public static final String[] COLUMNS = {
                 ID, TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_EVENT, TABLE_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO
         };

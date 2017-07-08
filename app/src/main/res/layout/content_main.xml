@@ -8,4 +8,9 @@
     tools:context="com.bh.olga_pc.hostess.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+    <com.bh.olga_pc.hostess.CalendarCustomView
+        android:id="@+id/custom_calendar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </android.support.constraint.ConstraintLayout>
