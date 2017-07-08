@@ -38,7 +38,7 @@ public class CalendarCustomView extends LinearLayout {
     private SimpleDateFormat formatter = new SimpleDateFormat("MMMM yyyy", Locale.ENGLISH);
     private Calendar cal = Calendar.getInstance(Locale.ENGLISH);
     private Context context;
-    private GridAdapter mAdapter;
+    private GridAdapter gridAdapter;
 
     public CalendarCustomView(Context context) {
         super(context);
@@ -93,16 +93,29 @@ public class CalendarCustomView extends LinearLayout {
         calendarGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(context, "Clicked " + position, Toast.LENGTH_LONG).show();
+                Date date = gridAdapter.getItem(position);
+                if (date != null) {
+                    Toast.makeText(context, "Clicked " + new SimpleDateFormat("dd/MM/yyyy").format(date), Toast.LENGTH_LONG).show();
+                    gridAdapter.setSelectedDate(date);
+                    gridAdapter.notifyDataSetChanged();
+                    calendarGridView.invalidate();
+
+
+                } else
+                    Toast.makeText(context, "Clicked " + position, Toast.LENGTH_LONG).show();
 
             }
         });
     }
 
     private void setUpCalendarAdapter() {
-        List<Date> dayValueInCells = new ArrayList<Date>();
+        List<Date> dayValueInCells = new ArrayList<>();
 
-        List<Event> mEvents = new DBQuery.Events(context).getAllFutureEvents();
+        List<Event> events = new DBQuery.Events(context).getAllFutureEvents();
+        Event e=new Event();
+        e.setGuests(10);
+        e.setStartTime(System.currentTimeMillis());
+        events.add(e);
         Calendar mCal = (Calendar) cal.clone();
         mCal.set(Calendar.DAY_OF_MONTH, 1);
         int firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) - 1;
@@ -114,7 +127,7 @@ public class CalendarCustomView extends LinearLayout {
         Log.d(TAG, "Number of date " + dayValueInCells.size());
         String sDate = formatter.format(cal.getTime());
         currentDate.setText(sDate);
-        mAdapter = new GridAdapter(context, dayValueInCells, cal, mEvents);
-        calendarGridView.setAdapter(mAdapter);
+        gridAdapter = new GridAdapter(context, dayValueInCells, cal, events);
+        calendarGridView.setAdapter(gridAdapter);
     }
 }

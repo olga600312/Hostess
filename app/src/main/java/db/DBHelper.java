@@ -97,7 +97,8 @@ public class DBHelper extends SQLiteOpenHelper {
         String CLIENT_ID = "client_id";
         String CLIENT_NAME = "client_name";
         String CLIENT_PHONE = "client_phone";
-        String TM_EVENT = "tm_event";
+        String TM_START = "tm_start";
+        String TM_END = "tm_end";
         String TM_CREATE = "tm_create";
         String TM_UPDATE = "tm_update";
         String USER_ID = "user";
@@ -115,7 +116,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         CLIENT_ID + " INTEGER NOT NULL, " +
                         CLIENT_NAME + " TEXT NOT NULL, " +
                         CLIENT_PHONE + " TEXT NOT NULL, " +
-                        TM_EVENT + " INTEGER NOT NULL, " +
+                        TM_START + " INTEGER NOT NULL, " +
+                        TM_END + " INTEGER NOT NULL, " +
                         TM_CREATE + " INTEGER NOT NULL, " +
                         TM_UPDATE + " INTEGER NOT NULL, " +
                         USER_ID + " INTEGER NOT NULL, " +
@@ -126,11 +128,11 @@ public class DBHelper extends SQLiteOpenHelper {
                         MEMO + " TEXT NOT NULL " +
                         ");"+
                         " CREATE INDEX idx_name ON " + TABLE_NAME +
-                        "(" + TM_EVENT + ");"+
+                        "(" + TM_START + ");"+
                         " CREATE INDEX idx_name ON " + TABLE_NAME +
                         "(" + CLIENT_ID + ");";
         public static final String[] COLUMNS = {
-                ID, TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_EVENT, TABLE_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO
+                ID, TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_START, TM_END,TABLE_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO
         };
     }
 }

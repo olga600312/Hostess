@@ -11,11 +11,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import beans.Client;
 import beans.Event;
@@ -116,7 +113,7 @@ public class DBQuery {
         }
         public List<Event> getAllFutureEvents(){
             // I use the rawQuery here only for example that I wouldn't forget in the future
-            String query = "SELECT * FROM "+DBHelper.EVENTS.TABLE_NAME+" WHERE "+DBHelper.EVENTS.TM_EVENT + ">= ?" ;
+            String query = "SELECT * FROM "+DBHelper.EVENTS.TABLE_NAME+" WHERE "+DBHelper.EVENTS.TM_START + ">= ?" ;
             Cursor cursor = helper.getReadableDatabase().rawQuery(query, new String[]{String.valueOf(System.currentTimeMillis())});
             List<Event> events=new ArrayList<>();
             if(cursor.moveToFirst()){
@@ -167,7 +164,7 @@ public class DBQuery {
             SQLiteDatabase database = helper.getReadableDatabase();
             SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
             queryBuilder.setTables(DBHelper.EVENTS.TABLE_NAME);
-            queryBuilder.appendWhere(DBHelper.EVENTS.TM_EVENT + ">= " + fromDate + " AND " + DBHelper.EVENTS.TM_EVENT + "<= " + toDate);
+            queryBuilder.appendWhere(DBHelper.EVENTS.TM_START + ">= " + fromDate + " AND " + DBHelper.EVENTS.TM_START + "<= " + toDate);
             Cursor cursor = queryBuilder.query(database, null, null, null, null, null, null);
             List<Event> arr = getEvents(cursor);
             cursor.close();
@@ -181,7 +178,7 @@ public class DBQuery {
             final int clientIdColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_ID);
             final int clientNameColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_NAME);
             final int clientPhoneColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_PHONE);
-            final int tmEventColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_EVENT);
+            final int tmEventColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_START);
             final int tmCreateColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_CREATE);
             final int tmUpdateColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_UPDATE);
             final int memoColumn = cursor.getColumnIndex(DBHelper.EVENTS.MEMO);
@@ -198,7 +195,7 @@ public class DBQuery {
                 client.setName(cursor.getString(clientNameColumn));
                 client.setPhone(cursor.getString(clientPhoneColumn));
                 e.setClient(client);
-                e.setDate(cursor.getLong(tmEventColumn));
+                e.setStartTime(cursor.getLong(tmEventColumn));
                 e.setDateCreate(cursor.getLong(tmCreateColumn));
                 e.setDateUpdate(cursor.getLong(tmUpdateColumn));
                 e.setGuests(cursor.getInt(guestsColumn));

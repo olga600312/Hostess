@@ -13,11 +13,60 @@ import android.view.inputmethod.InputMethodManager;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Created by olgats on 11/04/2016.
  */
 public class Utilities {
+    /////////////////////////////////////////////////////////////////
+    //
+    //      Helper methods.
+    //
+    /////////////////////////////////////////////////////////////////
+
+    /**
+     * Checks if two times are on the same day.
+     *
+     * @param dayOne The first day.
+     * @param dayTwo The second day.
+     * @return Whether the times are on the same day.
+     */
+    public static boolean isSameDay(Calendar dayOne, Calendar dayTwo) {
+        return dayOne.get(Calendar.YEAR) == dayTwo.get(Calendar.YEAR) && dayOne.get(Calendar.DAY_OF_YEAR) == dayTwo.get(Calendar.DAY_OF_YEAR);
+    }
+
+    /**
+     * Checks if two times are on the same day.
+     *
+     * @param dayOne The first day.
+     * @param dayTwo The second day.
+     * @return Whether the times are on the same day.
+     */
+    public static boolean isSameDay(long dayOne, long dayTwo) {
+        Calendar cOne = Calendar.getInstance();
+        cOne.setTimeInMillis(dayOne);
+        Calendar cTwo = Calendar.getInstance();
+        cTwo.setTimeInMillis(dayTwo);
+        return isSameDay(cOne, cTwo);
+    }
+
+    /**
+     * Returns a calendar instance at the start of this day
+     *
+     * @return the calendar instance
+     */
+    public static Calendar today() {
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MILLISECOND, 0);
+        return today;
+    }
+
+
     public static void hideKeyboard(View v) {
         InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);

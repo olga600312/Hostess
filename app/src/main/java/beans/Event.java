@@ -8,7 +8,8 @@ public class Event {
     private int id;
     private Client client;
     private User user;
-    private long date;
+    private long startTime;
+    private long endTime;
     private long dateCreate;
     private long dateUpdate;
     private String memo;
@@ -17,6 +18,15 @@ public class Event {
     private int guestsExtra;
     private int status;
     private int type;
+    private int color;
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
+    }
 
     public int getId() {
         return id;
@@ -66,12 +76,12 @@ public class Event {
         this.user = user;
     }
 
-    public long getDate() {
-        return date;
+    public long getStartTime() {
+        return startTime;
     }
 
-    public void setDate(long date) {
-        this.date = date;
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
     }
 
     public long getDateCreate() {
@@ -112,5 +122,13 @@ public class Event {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 }
