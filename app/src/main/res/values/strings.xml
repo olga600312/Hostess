@@ -32,4 +32,8 @@
     <string name="thu">THU</string>
     <string name="fri">FRI</string>
     <string name="sat">SAT</string>
+    <string name="prompt_client">Client name</string>
+    <string name="prompt_phone">Phone</string>
+    <string name="begin_time">Begin time</string>
+    <string name="end_time">End time</string>
 </resources>

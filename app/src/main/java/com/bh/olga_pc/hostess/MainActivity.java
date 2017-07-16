@@ -1,5 +1,6 @@
 package com.bh.olga_pc.hostess;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,6 +13,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -28,8 +35,29 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+               /* Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();*/
+                final Dialog dialog = new Dialog(view.getContext(),android.R.style.Theme_DeviceDefault_Dialog);
+                dialog.setContentView(R.layout.new_event_layout);
+                dialog.getWindow().getAttributes().windowAnimations = R.style.animationdialog;
+                Date date=calendarView.getSelectedDate();
+                if(date!=null) {
+                    dialog.setTitle(new SimpleDateFormat("dd/MM/yyyy").format(date));
+                }
+
+                // set the custom dialog components - text and button
+                EditText text = (EditText) dialog.findViewById(R.id.client_name);
+               // text.setText("Your Text");
+
+                Button dialogButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+                // if button is clicked, close the custom dialog
+                dialogButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
             }
         });
 

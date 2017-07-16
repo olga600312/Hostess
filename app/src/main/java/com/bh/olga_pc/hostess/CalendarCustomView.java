@@ -130,4 +130,8 @@ public class CalendarCustomView extends LinearLayout {
         gridAdapter = new GridAdapter(context, dayValueInCells, cal, events);
         calendarGridView.setAdapter(gridAdapter);
     }
+
+    public Date getSelectedDate(){
+        return gridAdapter.getSelectedDate();
+    }
 }
