@@ -112,7 +112,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String TABLE_CREATE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         ID + " INTEGER NOT NULL PRIMARY KEY, " +
-                        TYPE + " INTEGER NOT NULL, " +
+                        TYPE + " INTEGER NOT NULL DEFAULT 1, " +
                         CLIENT_ID + " INTEGER NOT NULL, " +
                         CLIENT_NAME + " TEXT NOT NULL, " +
                         CLIENT_PHONE + " TEXT NOT NULL, " +
@@ -132,7 +132,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         " CREATE INDEX idx_name ON " + TABLE_NAME +
                         "(" + CLIENT_ID + ");";
         public static final String[] COLUMNS = {
-                ID, TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_START, TM_END,TABLE_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO
+                ID, TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_START, TM_END,TM_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO
         };
     }
 }

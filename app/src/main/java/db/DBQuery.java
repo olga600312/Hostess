@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -123,6 +124,24 @@ public class DBQuery {
             cursor.close();
             return events;
         }
+
+        public List<Event> getAllFutureEvents(int year,int month,int day){
+            // I use the rawQuery here only for example that I wouldn't forget in the future
+            Calendar c=Calendar.getInstance();
+            c.setTimeInMillis(0);
+            c.set(Calendar.YEAR,year);
+            c.set(Calendar.MONTH,month);
+            c.set(Calendar.DAY_OF_MONTH,day);
+            String query = "SELECT * FROM "+DBHelper.EVENTS.TABLE_NAME+" WHERE "+DBHelper.EVENTS.TM_START + ">= ?" ;
+            Cursor cursor = helper.getReadableDatabase().rawQuery(query, new String[]{String.valueOf(c.getTimeInMillis())});
+            List<Event> events=new ArrayList<>();
+            if(cursor.moveToFirst()){
+                events= getEvents(cursor);
+
+            }
+            cursor.close();
+            return events;
+        }
         private Date convertStringToDate(String dateInString){
             DateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
             Date date = null;
@@ -209,7 +228,32 @@ public class DBQuery {
             return events;
         }
 
+        public Event create(Event e) {
+            SQLiteDatabase database = helper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            Client client=e.getClient();
+            if(client!=null) {
+                //TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_START, TM_END,
+                // TM_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO
+                values.put(DBHelper.EVENTS.TYPE, e.getType());
+                values.put(DBHelper.EVENTS.CLIENT_ID, client.getId());
+                values.put(DBHelper.EVENTS.CLIENT_NAME, client.getName());
+                values.put(DBHelper.EVENTS.CLIENT_PHONE, client.getPhone());
+                values.put(DBHelper.EVENTS.TM_START, e.getStartTime());
+                values.put(DBHelper.EVENTS.TM_END, e.getEndTime());
 
+                values.put(DBHelper.EVENTS.TM_CREATE, e.getDateCreate());
+                values.put(DBHelper.EVENTS.TM_UPDATE, e.getDateUpdate());
+                values.put(DBHelper.EVENTS.USER_ID, 1);
+                values.put(DBHelper.EVENTS.TBL, e.getTbl());
+                values.put(DBHelper.EVENTS.GUESTS, e.getGuests());
+                values.put(DBHelper.EVENTS.GUESTS_EXTRA, e.getGuestsExtra());
+                values.put(DBHelper.EVENTS.STATUS, e.getStatus());
+                values.put(DBHelper.EVENTS.MEMO, e.getMemo());
+                database.insert(DBHelper.EVENTS.TABLE_NAME, null, values);
+            }
+            return e;
+        }
     }
 
     public static class Clients {

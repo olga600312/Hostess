@@ -32,4 +32,26 @@
         <item name="@android:windowEnterAnimation">@anim/dialog_in</item>
         <item name="@android:windowExitAnimation">@anim/dialog_out</item>
     </style>
+
+    <style name="AppTheme.Holo.Light.ActionBar.Solid.Inverse" parent="AppTheme">
+        <item name="background">@color/primary</item>
+        <item name="backgroundSplit">@color/primary</item>
+        <item name="backgroundStacked">@color/primary</item>
+        <!--item name="titleTextStyle">@style/TextAppearance.Holo.Widget.ActionBar.Title.Inverse</item>
+        <item name="subtitleTextStyle">@style/TextAppearance.Holo.Widget.ActionBar.Subtitle.Inverse</item>
+
+        <item name="backgroundStacked">@drawable/ab_stacked_solid_dark_holo</item>
+        <item name="backgroundSplit">@drawable/ab_bottom_solid_inverse_holo</item>
+        <item name="divider">@drawable/list_divider_holo_dark</item>
+        <item name="progressBarStyle">@style/Widget.Holo.ProgressBar.Horizontal</item>
+        <item name="indeterminateProgressStyle">@style/Widget.Holo.ProgressBar</item>
+        <item name="progressBarPadding">32dip</item>
+        <item name="itemPadding">8dip</item-->
+    </style>
+    <style name="AppTheme.Holo.Light.DarkActionBar" parent="@android:style/Theme.Holo.Light.DarkActionBar">
+        <item name="actionBarStyle">@style/AppTheme.Holo.Light.ActionBar.Solid.Inverse</item>
+        <item name="actionBarItemBackground">@color/primary</item>
+
+
+    </style>
 </resources>

@@ -110,14 +110,12 @@ public class CalendarCustomView extends LinearLayout {
 
     private void setUpCalendarAdapter() {
         List<Date> dayValueInCells = new ArrayList<>();
-
-        List<Event> events = new DBQuery.Events(context).getAllFutureEvents();
-        Event e=new Event();
-        e.setGuests(10);
-        e.setStartTime(System.currentTimeMillis());
-        events.add(e);
         Calendar mCal = (Calendar) cal.clone();
         mCal.set(Calendar.DAY_OF_MONTH, 1);
+
+        List<Event> events = new DBQuery.Events(context).getAllFutureEvents(mCal.get(Calendar.YEAR),mCal.get(Calendar.MONTH),1);
+
+
         int firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) - 1;
         mCal.add(Calendar.DAY_OF_MONTH, -firstDayOfTheMonth);
         while (dayValueInCells.size() < MAX_CALENDAR_COLUMN) {
@@ -133,5 +131,10 @@ public class CalendarCustomView extends LinearLayout {
 
     public Date getSelectedDate(){
         return gridAdapter.getSelectedDate();
+    }
+
+    public void addEventCalendar(Event e){
+        gridAdapter.addEvent(e);
+        gridAdapter.notifyDataSetChanged();
     }
 }

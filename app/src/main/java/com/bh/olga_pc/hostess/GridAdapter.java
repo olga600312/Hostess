@@ -47,6 +47,9 @@ public class GridAdapter extends ArrayAdapter<Date> {
     public void setSelectedDate(Date selectedDate) {
         this.selectedDate = selectedDate;
     }
+    public void addEvent(Event e){
+        allEvents.add(e);
+    }
 
     private Calendar getSelectedCalendar() {
         Calendar c = null;
@@ -97,15 +100,25 @@ public class GridAdapter extends ArrayAdapter<Date> {
         cellNumber.setText(String.valueOf(dayValue));
         //Add events to the calendar
         TextView eventIndicator = (TextView) view.findViewById(R.id.event_id);
+        int count=getEventsCount(displayYear,displayMonth,dayValue);
+        //eventIndicator.setBackgroundColor(Color.parseColor("#FF4081"));
+        eventIndicator.setText(""+(count>0?count:""));
+        return view;
+    }
+
+    private int getEventsCount(int displayYear,int displayMonth,int dayValue){
+        int c=0;
         Calendar eventCalendar = Calendar.getInstance();
         for (int i = 0; i < allEvents.size(); i++) {
             eventCalendar.setTimeInMillis(allEvents.get(i).getStartTime());
             if (dayValue == eventCalendar.get(Calendar.DAY_OF_MONTH) && displayMonth == eventCalendar.get(Calendar.MONTH) + 1
                     && displayYear == eventCalendar.get(Calendar.YEAR)) {
-                eventIndicator.setBackgroundColor(Color.parseColor("#FF4081"));
+                //eventIndicator.setBackgroundColor(Color.parseColor("#FF4081"));
+                c++;
             }
         }
-        return view;
+
+        return c;
     }
 
     @Override

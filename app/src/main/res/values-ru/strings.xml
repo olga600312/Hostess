@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hostess</string>
+    <string name="action_settings">настройки</string>
+    <string name="action_sign_in">Войти в систему</string>
+    <string name="action_sign_in_short">Вход</string>
+    <string name="add_event">Создать</string>
+    <string name="begin_time">С</string>
+    <string name="cancel">Отмена</string>
+    <string name="comment">Заметки</string>
+    <string name="current_date">Текущая дата</string>
+    <string name="end_time">До</string>
+    <string name="error_field_required">Это поле обязательно к заполнению</string>
+    <string name="error_incorrect_password">Этот пароль неверен</string>
+    <string name="error_invalid_email">Этот адрес электронной почты недействителен</string>
+    <string name="error_invalid_password">Этот пароль слишком короткий</string>
+    <string name="error_invalid_user">Это имя пользователя недействительно</string>
+    <string name="from_time">С</string>
+    <string name="location">Расположение</string>
+    <string name="map">Расположение</string>
+    <string name="ok">Ok</string>
+    <string name="prompt_client">Имя клиента</string>
+    <string name="prompt_phone">Телефон</string>
+    <string name="prompt_password">Пароль</string>
+    <string name="prompt_user_name">Имя пользователя</string>
+    <string name="sat">Сб</string>
+    <string name="sun" translatable="false">Вс</string>
+    <string name="prompt_guests">Количество гостей</string>
+    <string name="success">Операция завершена успешно</string>
+    <string name="save">Сохранить</string>
+    <string name="thu">Чтв</string>
+    <string name="title_activity_main">Метрдотель</string>
+    <string name="tue">Вт</string>
+    <string name="wed" translatable="false">Ср</string>
+</resources>

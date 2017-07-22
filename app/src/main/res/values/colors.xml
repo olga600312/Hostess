@@ -5,6 +5,7 @@
     <color name="primary_start">#a36e5b</color>
     <color name="primary_light">#D7CCC8</color>
     <color name="accent">#9E9E9E</color>
+    <color name="link">#1565c0</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
@@ -13,4 +14,5 @@
     <color name="orange">#ffb780</color>
     <color name="green_dark">#f91f6019</color>
     <color name="colorSubTitle">#9b5d1a</color>
+    <color name="eventIndicator">#ef5350</color>
 </resources>

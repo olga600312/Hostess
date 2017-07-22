@@ -5,9 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="10sp"
         android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
@@ -45,44 +46,76 @@
                 android:maxLines="1" />
 
         </android.support.design.widget.TextInputLayout>
+        <!-- Guests -->
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tlGuests"
+            style="@style/LoginTilEditTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tlPhone">
 
-        <TextView
-            android:id="@+id/lblFromDate"
+            <EditText
+                android:id="@+id/teGuests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:hint="@string/prompt_guests"
+                android:inputType="numberDecimal"
+                android:maxLines="1"
+                android:textAlignment="viewEnd" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <ImageView
+            android:id="@+id/imgFromTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@id/tlPhone"
+            android:layout_below="@id/tlGuests"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/from_time"
+            android:src="@drawable/ic_schedule_black_24dp" />
+
+        <TextView
+            android:id="@+id/lblFromTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tlGuests"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/imgFromTime"
             android:shadowColor="@color/colorSubTitle"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="2"
-            android:text="@string/begin_time"
-            android:textSize="20sp" />
+            android:text="@string/begin_time" />
 
         <TextView
             android:id="@+id/tvFromDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/lblFromDate"
+            android:layout_alignBaseline="@id/lblFromTime"
             android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@id/lblFromDate"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/lblFromTime"
             android:clickable="true"
-            android:text="@string/begin_time"
             android:textAlignment="viewEnd"
-            android:textColor="@color/accent" />
+            android:textColor="@color/primary_text"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/lblToDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/lblFromDate"
+            android:layout_alignStart="@+id/lblFromTime"
+            android:layout_below="@+id/lblFromTime"
+            android:layout_marginTop="12dp"
             android:shadowColor="@color/colorSubTitle"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="2"
-            android:text="@string/end_time"
-            android:textSize="20sp" />
+            android:text="@string/end_time" />
 
         <TextView
             android:id="@+id/tvToDate"
@@ -95,17 +128,106 @@
             android:clickable="true"
             android:text="@string/end_time"
             android:textAlignment="viewEnd"
-            android:textColor="@color/accent" />
+            android:textColor="@color/primary_text"
+            android:textSize="20sp" />
+        <!-- Location -->
+        <ImageView
+            android:id="@+id/imgLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/tvToDate"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/location"
+            android:src="@drawable/ic_room_black_24dp" />
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tlLocation"
+            style="@style/LoginTilEditTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/lblToDate"
+            android:layout_below="@id/tvToDate"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/imgLocation">
+
+            <EditText
+                android:id="@+id/teLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:hint="@string/location"
+                android:maxLines="1" />
+        </android.support.design.widget.TextInputLayout>
+
+
+        <TextView
+            android:id="@+id/btnMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignStart="@+id/tvToDate"
+            android:layout_alignTop="@id/tlLocation"
+            android:layout_below="@id/tvToDate"
+            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@id/tlLocation"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:text="@string/map"
+
+            android:textAlignment="viewEnd"
+            android:textColor="@color/link" />
+
+
+        <!-- Comment -->
+        <ImageView
+            android:id="@+id/imgComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/tlLocation"
+            android:layout_marginTop="22dp"
+            android:contentDescription="@string/comment"
+            android:src="@drawable/ic_comment_black_24dp" />
+
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/tlComment"
+            style="@style/LoginTilEditTextLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@id/lblToDate"
+            android:layout_below="@id/btnMap"
+            android:layout_marginTop="22dp">
+
+            <EditText
+                android:id="@+id/tvComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/comment" />
+        </android.support.design.widget.TextInputLayout>
 
         <Button
-            android:id="@+id/dialogButtonOK"
-            android:layout_width="100px"
+            android:id="@+id/dialogButtonSave"
+            android:layout_width="100sp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:layout_marginRight="5dp"
+            android:layout_marginBottom="15dp"
+            android:layout_marginEnd="20sp"
+            android:text="@string/save" />
+
+        <Button
+            android:id="@+id/dialogButtonCancel"
+            android:layout_width="100sp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="15dp"
             android:layout_marginStart="20sp"
-            android:layout_marginTop="5dp"
-            android:text=" Ok " />
+            android:text="@string/cancel" />
+
+
     </RelativeLayout>
 </LinearLayout>
