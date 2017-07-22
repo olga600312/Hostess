@@ -70,11 +70,11 @@ public class DBQuery {
             return arr.size() > 0 ? arr.get(0) : null;
         }
 
-        public List<User> retrieve(String userName,String password) {
+        public List<User> retrieve(String userName, String password) {
             SQLiteDatabase database = helper.getReadableDatabase();
             SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
             queryBuilder.setTables(DBHelper.USERS.TABLE_NAME);
-            queryBuilder.appendWhere(DBHelper.USERS.NAME + "= '" + userName + "' AND " + DBHelper.USERS.PASSWORD + "= '" + password+"'");
+            queryBuilder.appendWhere(DBHelper.USERS.NAME + "= '" + userName + "' AND " + DBHelper.USERS.PASSWORD + "= '" + password + "'");
             Cursor cursor = queryBuilder.query(database, null, null, null, null, null, null);
             List<User> arr = getUsers(cursor);
             cursor.close();
@@ -112,37 +112,63 @@ public class DBQuery {
         public Events(Context context) {
             helper = new DBHelper(context);
         }
-        public List<Event> getAllFutureEvents(){
+
+        public List<Event> getAllFutureEvents() {
             // I use the rawQuery here only for example that I wouldn't forget in the future
-            String query = "SELECT * FROM "+DBHelper.EVENTS.TABLE_NAME+" WHERE "+DBHelper.EVENTS.TM_START + ">= ?" ;
+            String query = "SELECT * FROM " + DBHelper.EVENTS.TABLE_NAME + " WHERE " + DBHelper.EVENTS.TM_START + ">= ?";
             Cursor cursor = helper.getReadableDatabase().rawQuery(query, new String[]{String.valueOf(System.currentTimeMillis())});
-            List<Event> events=new ArrayList<>();
-            if(cursor.moveToFirst()){
-                events= getEvents(cursor);
+            List<Event> events = new ArrayList<>();
+            if (cursor.moveToFirst()) {
+                events = getEvents(cursor);
 
             }
             cursor.close();
             return events;
         }
 
-        public List<Event> getAllFutureEvents(int year,int month,int day){
+        public List<Event> getAllFutureEvents(int year, int month, int day) {
             // I use the rawQuery here only for example that I wouldn't forget in the future
-            Calendar c=Calendar.getInstance();
-            c.setTimeInMillis(0);
-            c.set(Calendar.YEAR,year);
-            c.set(Calendar.MONTH,month);
-            c.set(Calendar.DAY_OF_MONTH,day);
-            String query = "SELECT * FROM "+DBHelper.EVENTS.TABLE_NAME+" WHERE "+DBHelper.EVENTS.TM_START + ">= ?" ;
-            Cursor cursor = helper.getReadableDatabase().rawQuery(query, new String[]{String.valueOf(c.getTimeInMillis())});
-            List<Event> events=new ArrayList<>();
-            if(cursor.moveToFirst()){
-                events= getEvents(cursor);
+            Calendar from = Calendar.getInstance();
+            from.setTimeInMillis(0);
+            from.set(Calendar.YEAR, year);
+            from.set(Calendar.MONTH, month);
+            from.set(Calendar.DAY_OF_MONTH, day);
+            String query = "SELECT * FROM " + DBHelper.EVENTS.TABLE_NAME + " WHERE " + DBHelper.EVENTS.TM_START + ">=?";
+            Cursor cursor = helper.getReadableDatabase().rawQuery(query, new String[]{"" + from.getTimeInMillis()});
+            List<Event> events = new ArrayList<>();
+
+            events = getEvents(cursor);
+
+            cursor.close();
+            return events;
+        }
+
+
+        public List<Event> getCurrentDayEvents(int year, int month, int day) {
+            // I use the rawQuery here only for example that I wouldn't forget in the future
+            Calendar from = Calendar.getInstance();
+            from.setTimeInMillis(0);
+            from.set(Calendar.YEAR, year);
+            from.set(Calendar.MONTH, month);
+            from.set(Calendar.DAY_OF_MONTH, day);
+            Calendar to = Calendar.getInstance();
+            to.setTimeInMillis(from.getTimeInMillis());
+            to.set(Calendar.HOUR_OF_DAY, 23);
+            to.set(Calendar.MINUTE, 59);
+            to.set(Calendar.SECOND, 59);
+            String query = "SELECT * FROM " + DBHelper.EVENTS.TABLE_NAME + " WHERE " + DBHelper.EVENTS.TM_START + ">=? AND " + DBHelper.EVENTS.TM_START + "<=?";
+            Cursor cursor = helper.getReadableDatabase().rawQuery(query, new String[]{
+                    "" + from.getTimeInMillis(), "" + to.getTimeInMillis()});
+            List<Event> events = new ArrayList<>();
+            if (cursor.moveToFirst()) {
+                events = getEvents(cursor);
 
             }
             cursor.close();
             return events;
         }
-        private Date convertStringToDate(String dateInString){
+
+        private Date convertStringToDate(String dateInString) {
             DateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
             Date date = null;
             try {
@@ -152,6 +178,7 @@ public class DBQuery {
             }
             return date;
         }
+
         public Cursor getCursor() {
             SQLiteDatabase database = helper.getReadableDatabase();
             return database.query(DBHelper.EVENTS.TABLE_NAME, null, null, null, null, null, null);
@@ -192,47 +219,49 @@ public class DBQuery {
 
         private ArrayList<Event> getEvents(Cursor cursor) {
             ArrayList<Event> events = new ArrayList<>();
-            final int idColumn = cursor.getColumnIndex(DBHelper.EVENTS.ID);
-            final int userIdColumn = cursor.getColumnIndex(DBHelper.EVENTS.USER_ID);
-            final int clientIdColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_ID);
-            final int clientNameColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_NAME);
-            final int clientPhoneColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_PHONE);
-            final int tmEventColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_START);
-            final int tmCreateColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_CREATE);
-            final int tmUpdateColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_UPDATE);
-            final int memoColumn = cursor.getColumnIndex(DBHelper.EVENTS.MEMO);
-            final int tblColumn = cursor.getColumnIndex(DBHelper.EVENTS.TBL);
-            final int guestsColumn = cursor.getColumnIndex(DBHelper.EVENTS.GUESTS);
-            final int guestsExtraColumn = cursor.getColumnIndex(DBHelper.EVENTS.GUESTS_EXTRA);
-            final int typeColumn = cursor.getColumnIndex(DBHelper.EVENTS.TYPE);
-            final int statusColumn = cursor.getColumnIndex(DBHelper.EVENTS.STATUS);
-            do {
-                Event e = new Event();
-                e.setId(cursor.getInt(idColumn));
-                Client client = new Client();
-                client.setId(cursor.getInt(clientIdColumn));
-                client.setName(cursor.getString(clientNameColumn));
-                client.setPhone(cursor.getString(clientPhoneColumn));
-                e.setClient(client);
-                e.setStartTime(cursor.getLong(tmEventColumn));
-                e.setDateCreate(cursor.getLong(tmCreateColumn));
-                e.setDateUpdate(cursor.getLong(tmUpdateColumn));
-                e.setGuests(cursor.getInt(guestsColumn));
-                e.setGuestsExtra(cursor.getInt(guestsExtraColumn));
-                e.setTbl(cursor.getInt(tblColumn));
-                e.setType(cursor.getInt(typeColumn));
-                e.setMemo(cursor.getString(memoColumn));
-                events.add(e);
+            if (cursor.moveToFirst()) {
+                final int idColumn = cursor.getColumnIndex(DBHelper.EVENTS.ID);
+                final int userIdColumn = cursor.getColumnIndex(DBHelper.EVENTS.USER_ID);
+                final int clientIdColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_ID);
+                final int clientNameColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_NAME);
+                final int clientPhoneColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_PHONE);
+                final int tmEventColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_START);
+                final int tmCreateColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_CREATE);
+                final int tmUpdateColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_UPDATE);
+                final int memoColumn = cursor.getColumnIndex(DBHelper.EVENTS.MEMO);
+                final int tblColumn = cursor.getColumnIndex(DBHelper.EVENTS.TBL);
+                final int guestsColumn = cursor.getColumnIndex(DBHelper.EVENTS.GUESTS);
+                final int guestsExtraColumn = cursor.getColumnIndex(DBHelper.EVENTS.GUESTS_EXTRA);
+                final int typeColumn = cursor.getColumnIndex(DBHelper.EVENTS.TYPE);
+                final int statusColumn = cursor.getColumnIndex(DBHelper.EVENTS.STATUS);
+                do {
+                    Event e = new Event();
+                    e.setId(cursor.getInt(idColumn));
+                    Client client = new Client();
+                    client.setId(cursor.getInt(clientIdColumn));
+                    client.setName(cursor.getString(clientNameColumn));
+                    client.setPhone(cursor.getString(clientPhoneColumn));
+                    e.setClient(client);
+                    e.setStartTime(cursor.getLong(tmEventColumn));
+                    e.setDateCreate(cursor.getLong(tmCreateColumn));
+                    e.setDateUpdate(cursor.getLong(tmUpdateColumn));
+                    e.setGuests(cursor.getInt(guestsColumn));
+                    e.setGuestsExtra(cursor.getInt(guestsExtraColumn));
+                    e.setTbl(cursor.getInt(tblColumn));
+                    e.setType(cursor.getInt(typeColumn));
+                    e.setMemo(cursor.getString(memoColumn));
+                    events.add(e);
+                }
+                while (cursor.moveToNext());
             }
-            while (cursor.moveToNext());
             return events;
         }
 
         public Event create(Event e) {
             SQLiteDatabase database = helper.getWritableDatabase();
             ContentValues values = new ContentValues();
-            Client client=e.getClient();
-            if(client!=null) {
+            Client client = e.getClient();
+            if (client != null) {
                 //TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_START, TM_END,
                 // TM_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO
                 values.put(DBHelper.EVENTS.TYPE, e.getType());

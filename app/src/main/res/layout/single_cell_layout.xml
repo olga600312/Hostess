@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:paddingEnd="2sp"
+    android:paddingStart="2sp"
+    >
 
     <TextView
         android:id="@+id/calendar_date_id"
@@ -18,7 +20,6 @@
         android:id="@+id/event_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
         android:gravity="end"
         android:orientation="horizontal">
 
@@ -27,6 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAlignment="viewEnd"
-            android:textColor="@color/eventIndicator"/>
+            android:layout_marginEnd="2dp"
+            android:textColor="@color/eventIndicator"
+            android:textStyle="bold"/>
     </LinearLayout>
 </LinearLayout>

@@ -36,7 +36,7 @@ public class GridAdapter extends ArrayAdapter<Date> {
         this.currentDate = currentDate;
         this.allEvents = allEvents;
         mInflater = LayoutInflater.from(context);
-        selectedDate=new Date();
+        selectedDate = new Date();
 
     }
 
@@ -47,7 +47,8 @@ public class GridAdapter extends ArrayAdapter<Date> {
     public void setSelectedDate(Date selectedDate) {
         this.selectedDate = selectedDate;
     }
-    public void addEvent(Event e){
+
+    public void addEvent(Event e) {
         allEvents.add(e);
     }
 
@@ -100,14 +101,14 @@ public class GridAdapter extends ArrayAdapter<Date> {
         cellNumber.setText(String.valueOf(dayValue));
         //Add events to the calendar
         TextView eventIndicator = (TextView) view.findViewById(R.id.event_id);
-        int count=getEventsCount(displayYear,displayMonth,dayValue);
+        int count = getEventsCount(displayYear, displayMonth, dayValue);
         //eventIndicator.setBackgroundColor(Color.parseColor("#FF4081"));
-        eventIndicator.setText(""+(count>0?count:""));
+        eventIndicator.setText("" + (count > 0 ? count : ""));
         return view;
     }
 
-    private int getEventsCount(int displayYear,int displayMonth,int dayValue){
-        int c=0;
+    private int getEventsCount(int displayYear, int displayMonth, int dayValue) {
+        int c = 0;
         Calendar eventCalendar = Calendar.getInstance();
         for (int i = 0; i < allEvents.size(); i++) {
             eventCalendar.setTimeInMillis(allEvents.get(i).getStartTime());

@@ -1,6 +1,8 @@
 package com.bh.olga_pc.hostess;
 
 import android.content.Context;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +14,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.bh.olga_pc.hostess.adapters.EventListAdapter;
+import com.bh.olga_pc.hostess.decorators.DividerItemDecoration;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +37,7 @@ public class CalendarCustomView extends LinearLayout {
     private ImageView previousButton, nextButton;
     private TextView currentDate;
     private GridView calendarGridView;
+    private RecyclerView recyclerView;
     private Button addEventButton;
     private static final int MAX_CALENDAR_COLUMN = 42;
     private int month, year;
@@ -39,6 +45,7 @@ public class CalendarCustomView extends LinearLayout {
     private Calendar cal = Calendar.getInstance(Locale.ENGLISH);
     private Context context;
     private GridAdapter gridAdapter;
+    private EventListAdapter eventAdapter;
 
     public CalendarCustomView(Context context) {
         super(context);
@@ -60,13 +67,23 @@ public class CalendarCustomView extends LinearLayout {
     }
 
     private void initializeUILayout() {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.calendar_layout, this);
         previousButton = (ImageView) view.findViewById(R.id.previous_month);
         nextButton = (ImageView) view.findViewById(R.id.next_month);
         currentDate = (TextView) view.findViewById(R.id.display_current_date);
         addEventButton = (Button) view.findViewById(R.id.add_calendar_event);
         calendarGridView = (GridView) view.findViewById(R.id.calendar_grid);
+        recyclerView = (RecyclerView) view.findViewById(R.id.event_list);
+        //recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        eventAdapter = new EventListAdapter();
+        recyclerView.setAdapter(eventAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                linearLayoutManager.getOrientation());
+        recyclerView.addItemDecoration(dividerItemDecoration);
     }
 
     private void setPreviousButtonClickEvent() {
@@ -99,6 +116,7 @@ public class CalendarCustomView extends LinearLayout {
                     gridAdapter.setSelectedDate(date);
                     gridAdapter.notifyDataSetChanged();
                     calendarGridView.invalidate();
+                    updateEventList(gridAdapter.getSelectedDate());
 
 
                 } else
@@ -127,6 +145,17 @@ public class CalendarCustomView extends LinearLayout {
         currentDate.setText(sDate);
         gridAdapter = new GridAdapter(context, dayValueInCells, cal, events);
         calendarGridView.setAdapter(gridAdapter);
+        updateEventList(gridAdapter.getSelectedDate());
+    }
+
+    private void updateEventList(Date date){
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(date);
+        eventAdapter.clear();
+        eventAdapter.addAll(new DBQuery.Events(context).getCurrentDayEvents(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)));
+        eventAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(eventAdapter);
+
     }
 
     public Date getSelectedDate(){
@@ -136,5 +165,7 @@ public class CalendarCustomView extends LinearLayout {
     public void addEventCalendar(Event e){
         gridAdapter.addEvent(e);
         gridAdapter.notifyDataSetChanged();
+        eventAdapter.add(e);
+        eventAdapter.notifyDataSetChanged();
     }
 }

@@ -1,5 +1,8 @@
 package beans;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Olga-PC on 7/1/2017.
  */
@@ -130,5 +133,14 @@ public class Event {
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "Event{" +
+                new SimpleDateFormat("yyyy/MM/dd HH:mm").format(new Date(startTime))+
+                ", client=" + client +
+                ", guests=" + guests +
+                '}';
     }
 }

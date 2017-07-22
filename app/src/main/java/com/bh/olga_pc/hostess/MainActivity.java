@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity
                         }
                         if (guests <= 0) {
                             teGuests.setError("Invalid guests number");
+                            teGuests.selectAll();
                             teGuests.requestFocus();
                             return;
                         }
@@ -160,14 +161,14 @@ public class MainActivity extends AppCompatActivity
 
                         String arr[] = from.split(":");
                         if (arr.length != 2) {
-                            Toast.makeText(dialog.getContext(), "Invalid time", Toast.LENGTH_LONG).show();
+                            Toast.makeText(dialog.getContext(), "Invalid time", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         Date date = calendarView.getSelectedDate();
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(date);
                         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(arr[0]));
-                        calendar.set(Calendar.MINUTE, Integer.parseInt(arr[0]));
+                        calendar.set(Calendar.MINUTE, Integer.parseInt(arr[1]));
                         e.setStartTime(calendar.getTimeInMillis());
 
                         arr = to.split(":");
@@ -176,7 +177,7 @@ public class MainActivity extends AppCompatActivity
                             return;
                         }
                         calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(arr[0]));
-                        calendar.set(Calendar.MINUTE, Integer.parseInt(arr[0]));
+                        calendar.set(Calendar.MINUTE, Integer.parseInt(arr[1]));
                         e.setEndTime(calendar.getTimeInMillis());
                         if (e.getEndTime() - e.getStartTime() <= 0 || e.getEndTime() - e.getStartTime() > 15 * 60 * 60 * 1000) {
                             Toast.makeText(dialog.getContext(), "Invalid time", Toast.LENGTH_LONG).show();
