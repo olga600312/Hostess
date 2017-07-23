@@ -16,11 +16,12 @@
 
     <com.bh.olga_pc.hostess.customViews.TableView
         android:id="@+id/table"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="12sp"
+        android:layout_height="12sp"
         android:layout_toEndOf="@id/tvClient"
         custom:showText="true"
-        custom:labelPosition="left"/>
+        custom:labelPosition="left"
+        custom:bg="@color/orange"/>
 
     <TextView
         android:id="@+id/tvStartTime"

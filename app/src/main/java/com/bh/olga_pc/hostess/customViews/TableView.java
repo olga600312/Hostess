@@ -66,6 +66,7 @@ public class TableView extends View {
         shapePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         shapePaint.setStyle(Paint.Style.FILL);
         shapePaint.setTextSize(mTextHeight);
+        shapePaint.setColor(bg);
 
         shadowPaint = new Paint(0);
         shadowPaint.setColor(0xff101010);
