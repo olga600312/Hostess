@@ -43,14 +43,7 @@
             android:src="@drawable/ic_keyboard_arrow_right_black_24dp" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/add_calendar_event"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="@string/add_event"
-        android:textSize="12sp"
-        android:textStyle="bold" />
+
 
     <LinearLayout
         android:layout_width="match_parent"

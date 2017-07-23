@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/com.bh.olga_pc.hostess.customViews"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4sp">
@@ -13,12 +14,20 @@
         android:textSize="16sp"
         android:textStyle="bold" />
 
+    <com.bh.olga_pc.hostess.customViews.TableView
+        android:id="@+id/table"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/tvClient"
+        custom:showText="true"
+        custom:labelPosition="left"/>
+
     <TextView
         android:id="@+id/tvStartTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignBaseline="@id/tvClient"
+        android:layout_alignParentEnd="true"
         android:textSize="16sp"
         android:textStyle="bold" />
 
@@ -31,14 +40,15 @@
         android:layout_below="@id/tvClient"
         android:textSize="16sp"
         android:textStyle="bold" />
+
     <TextView
         android:id="@+id/tvGst"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_alignBaseline="@id/tvPhone"
-        android:textSize="16sp"
+        android:layout_alignParentEnd="true"
         android:textColor="@color/gst"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
 
