@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity
                 final Dialog dialog = new Dialog(view.getContext(), R.style.AppTheme_Holo_Light_DarkActionBar);
                 dialog.setContentView(R.layout.new_event_layout);
                 dialog.getWindow().getAttributes().windowAnimations = R.style.animationdialog;
+
+
                 Date date = calendarView.getSelectedDate();
                 if (date != null) {
                     dialog.setTitle(new SimpleDateFormat("dd/MM/yyyy").format(date));
