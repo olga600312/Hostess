@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="DateRestView">
+        <attr name="hourHeight" format="dimension" />
+        <attr name="minHourHeight" format="dimension" />
+        <attr name="maxHourHeight" format="dimension" />
+        <attr name="textSize" format="dimension" />
+        <attr name="eventTextSize" format="dimension" />
+        <attr name="headerColumnPadding" format="dimension" />
+        <attr name="headerRowPadding" format="dimension" />
+        <attr name="columnGap" format="dimension" />
+        <attr name="headerColumnTextColor" format="color" />
+        <attr name="noOfTables" format="integer" />
+        <attr name="headerRowBackgroundColor" format="color" />
+        <attr name="tableBackgroundColor" format="color" />
+        <attr name="hourSeparatorColor" format="color" />
+        <attr name="hourSeparatorHeight" format="dimension" />
+        <attr name="eventTextColor" format="color" />
+        <attr name="eventPadding" format="dimension" />
+        <attr name="headerColumnBackground" format="color" />
+        <attr name="overlappingEventGap" format="dimension" />
+        <attr name="eventMarginVertical" format="dimension" />
+        <attr name="xScrollingSpeed" format="float" />
+        <attr name="eventCornerRadius" format="dimension" />
+        <attr name="horizontalFlingEnabled" format="boolean" />
+        <attr name="verticalFlingEnabled" format="boolean" />
+        <attr name="allDayEventHeight" format="dimension" />
+        <attr name="scrollDuration" format="integer" />
+    </declare-styleable>
     <declare-styleable name="DayTableView">
         <attr name="firstDayOfWeek" format="enum">
             <enum name="sunday" value="1" />

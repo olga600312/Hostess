@@ -9,25 +9,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/dialogButtonSave"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginBottom="15dp"
             android:layout_marginEnd="50sp"
+            android:layout_weight="1"
             android:text="@string/save" />
 
         <Button
             android:id="@+id/dialogButtonCancel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginBottom="15dp"
             android:layout_marginStart="20sp"
+            android:layout_weight="1"
             android:text="@string/cancel" />
 
-    </LinearLayout>>
+    </LinearLayout>
+    >
     <ScrollView
         android:id="@+id/sv_entete"
         android:layout_width="match_parent"

@@ -8,13 +8,16 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  * Created by olgats on 11/04/2016.
@@ -64,6 +67,20 @@ public class Utilities {
         today.set(Calendar.SECOND, 0);
         today.set(Calendar.MILLISECOND, 0);
         return today;
+    }
+
+    public static String interpretTime(Context context,int hour) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, 0);
+
+        try {
+            SimpleDateFormat sdf = DateFormat.is24HourFormat(context) ? new SimpleDateFormat("HH:mm", Locale.getDefault()) : new SimpleDateFormat("hh a", Locale.getDefault());
+            return sdf.format(calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
 
