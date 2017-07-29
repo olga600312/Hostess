@@ -1,4 +1,4 @@
-package beans;
+package com.bh.olga_pc.hostess.beans;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -7,7 +7,7 @@ import java.util.Date;
  * Created by Olga-PC on 7/1/2017.
  */
 
-public class Event {
+public class Event  implements Cloneable{
     private int id;
     private Client client;
     private User user;
@@ -142,5 +142,10 @@ public class Event {
                 ", client=" + client +
                 ", guests=" + guests +
                 '}';
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

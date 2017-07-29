@@ -49,7 +49,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
-import beans.Event;
+import com.bh.olga_pc.hostess.beans.Event;
 
 import static com.bh.olga_pc.hostess.Utilities.*;
 
@@ -1064,6 +1064,9 @@ public class DayTableView extends View {
     private void cacheEvent(Event event) {
         if (event.getStartTime()-event.getEndTime() >= 0)
             return;
+
+
+
         /*List<Event> splitedEvents = event.splitWeekViewEvents();
         for (Event splitedEvent : splitedEvents) {
             mEventRects.add(new EventRect(splitedEvent, event, null));

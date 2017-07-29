@@ -33,8 +33,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import beans.Login;
-import beans.User;
+import com.bh.olga_pc.hostess.beans.Login;
+import com.bh.olga_pc.hostess.beans.User;
 import ws.WSAccess;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -353,7 +353,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (user!=null) {
-                Toast.makeText(getBaseContext(), "Hello "+user.getName(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getBaseContext(), "Hello "+user.getName(), Toast.LENGTH_SHORT).show();
                 onLoginSuccess();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

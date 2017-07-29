@@ -32,6 +32,7 @@ import android.view.ViewConfiguration;
 import android.widget.OverScroller;
 
 import com.bh.olga_pc.hostess.R;
+import com.bh.olga_pc.hostess.RegionLoader;
 import com.bh.olga_pc.hostess.Utilities;
 import com.bh.olga_pc.hostess.tbls.DayTableView;
 
@@ -41,7 +42,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import beans.Event;
+import com.bh.olga_pc.hostess.beans.Event;
 
 import static com.bh.olga_pc.hostess.Utilities.isSameDay;
 
@@ -53,7 +54,8 @@ public class DateRestView extends View {
     private android.view.GestureDetector.OnGestureListener gestureListener;
     private float mWidthPerTable;
     private ScrollListener mScrollListener;
-    private TableViewLoader mRegionViewLoader;
+    private RegionLoader regionLoader;
+    private boolean allDayEventEnable;
 
 
     private enum Direction {
@@ -143,15 +145,15 @@ public class DateRestView extends View {
     private EmptyViewLongPressListener emptyViewLongPressListener;
 
     public DateRestView(Context context) {
-        super(context);
+        this(context,null);
     }
 
     public DateRestView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs,0);
     }
 
     public DateRestView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        this(context, attrs, defStyleAttr,0);
     }
 
     public DateRestView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -423,6 +425,59 @@ public class DateRestView extends View {
         };
     }
 
+
+    public void setOnEventClickListener(EventClickListener listener) {
+        this.eventClickListener = listener;
+    }
+
+    public EventClickListener getEventClickListener() {
+        return eventClickListener;
+    }
+
+    public
+    @Nullable
+    RegionLoader.RegionChangeListener getRegionChangeListener() {
+
+            return  regionLoader.getOnRegionChangeListener();
+     }
+
+    public void setRegionChangeListener(RegionLoader.RegionChangeListener regionChangeListener) {
+
+        this.regionLoader = new RegionLoader(regionChangeListener);
+    }
+
+    public EventLongPressListener getEventLongPressListener() {
+        return eventLongPressListener;
+    }
+
+    public void setEventLongPressListener(EventLongPressListener eventLongPressListener) {
+        this.eventLongPressListener = eventLongPressListener;
+    }
+
+    public void setEmptyViewClickListener(EmptyViewClickListener emptyViewClickListener) {
+        this.emptyViewClickListener = emptyViewClickListener;
+    }
+
+    public EmptyViewClickListener getEmptyViewClickListener() {
+        return emptyViewClickListener;
+    }
+
+    public void setEmptyViewLongPressListener(EmptyViewLongPressListener emptyViewLongPressListener) {
+        this.emptyViewLongPressListener = emptyViewLongPressListener;
+    }
+
+    public EmptyViewLongPressListener getEmptyViewLongPressListener() {
+        return emptyViewLongPressListener;
+    }
+
+    public boolean isAllDayEventEnable() {
+        return allDayEventEnable;
+    }
+
+    public void setAllDayEventEnable(boolean allDayEventEnable) {
+        this.allDayEventEnable = allDayEventEnable;
+    }
+
     // fix rotation changes
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -525,24 +580,29 @@ public class DateRestView extends View {
 
     private void calculateHeaderHeight() {
         //Make sure the header is the right size (depends on AllDay events)
-        boolean containsAllDayEvent = false;
-        if (mEventRects != null && mEventRects.size() > 0) {
-            for (int tableNumber = 0;  tableNumber < numberOfTables&&!containsAllDayEvent;  tableNumber++) {
-                for (int i = 0; i < mEventRects.size()&&!containsAllDayEvent; i++) {
-                    containsAllDayEvent=mEventRects.get(i).event.getTbl()==tableNumber+1/* && mEventRects.get(i).event.isAllDay()*/ ;
+        if(allDayEventEnable) {
+            boolean containsAllDayEvent = false;
+
+            if (mEventRects != null && mEventRects.size() > 0) {
+                for (int tableNumber = 0; tableNumber < numberOfTables && !containsAllDayEvent; tableNumber++) {
+                    for (int i = 0; i < mEventRects.size() && !containsAllDayEvent; i++) {
+                        containsAllDayEvent = mEventRects.get(i).event.getTbl() == tableNumber + 1/* && mEventRects.get(i).event.isAllDay()*/;
+                    }
                 }
             }
-        }
-        if (containsAllDayEvent) {
-            mHeaderHeight = mHeaderTextHeight + (mAllDayEventHeight + mHeaderMarginBottom);
-        } else {
+            if (containsAllDayEvent) {
+                mHeaderHeight = mHeaderTextHeight + (mAllDayEventHeight + mHeaderMarginBottom);
+            } else {
+                mHeaderHeight = mHeaderTextHeight;
+            }
+        }else{
             mHeaderHeight = mHeaderTextHeight;
         }
     }
 
 
     private void drawHeaderRowAndEvents(Canvas canvas) {
-        // Calculate the available width for each day.
+        // Calculate the available width for each table.
         mHeaderColumnWidth = mTimeTextWidth + mHeaderColumnPadding * 2;
         mWidthPerTable = getWidth() - mHeaderColumnWidth - mColumnGap * (numberOfTables - 1);
         mWidthPerTable = mWidthPerTable / numberOfTables;
@@ -647,8 +707,8 @@ public class DateRestView extends View {
             // Get more events if necessary. We want to store the events 3 months beforehand. Get
             // events only when it is the first iteration of the loop.
             if (mEventRects == null || mRefreshEvents ||
-                    (tableNumber == leftTablesWithGaps + 1 && regionPeriod != (int) mRegionViewLoader.toRegionViewPeriodIndex(tableNumber) &&
-                            Math.abs(regionPeriod - mRegionViewLoader.toRegionViewPeriodIndex(tableNumber)) > 0.5)) {
+                    (tableNumber == leftTablesWithGaps + 1 && regionPeriod != (int) regionLoader.toRegionViewPeriodIndex(tableNumber) &&
+                            Math.abs(regionPeriod - regionLoader.toRegionViewPeriodIndex(tableNumber)) > 0.5)) {
                 getMoreEvents(selectedDate,tableNumber);
                 mRefreshEvents = false;
             }
@@ -750,9 +810,9 @@ public class DateRestView extends View {
 
         // Get more events if the month is changed.
         if (mEventRects == null)
-            mEventRects = new ArrayList<EventRect>();
-        if (mRegionViewLoader == null && !isInEditMode())
-            throw new IllegalStateException("You must provide a MonthChangeListener");
+            mEventRects = new ArrayList<>();
+        if (regionLoader == null && !isInEditMode())
+            throw new IllegalStateException("You must provide a RegionChangeListener");
 
         // If a refresh was requested then reset some variables.
         if (mRefreshEvents) {
@@ -763,32 +823,32 @@ public class DateRestView extends View {
             regionPeriod = -1;
         }
 
-        if (mRegionViewLoader != null) {
-            int periodToFetch = (int) mRegionViewLoader.toRegionViewPeriodIndex(table);
-            if (!isInEditMode() && (regionPeriod < 0 || regionPeriod != periodToFetch || mRefreshEvents)) {
+        if (regionLoader != null) {
+            int regionToFetch = (int) regionLoader.toRegionViewPeriodIndex(table);
+            if (!isInEditMode() && (regionPeriod < 0 || regionPeriod != regionToFetch || mRefreshEvents)) {
                 List<? extends Event> previousPeriodEvents = null;
                 List<? extends Event> currentPeriodEvents = null;
                 List<? extends Event> nextPeriodEvents = null;
 
                 if (mPreviousPeriodEvents != null && mCurrentPeriodEvents != null && mNextPeriodEvents != null) {
-                    if (periodToFetch == regionPeriod - 1) {
+                    if (regionToFetch == regionPeriod - 1) {
                         currentPeriodEvents = mPreviousPeriodEvents;
                         nextPeriodEvents = mCurrentPeriodEvents;
-                    } else if (periodToFetch == regionPeriod) {
+                    } else if (regionToFetch == regionPeriod) {
                         previousPeriodEvents = mPreviousPeriodEvents;
                         currentPeriodEvents = mCurrentPeriodEvents;
                         nextPeriodEvents = mNextPeriodEvents;
-                    } else if (periodToFetch == regionPeriod + 1) {
+                    } else if (regionToFetch == regionPeriod + 1) {
                         previousPeriodEvents = mCurrentPeriodEvents;
                         currentPeriodEvents = mNextPeriodEvents;
                     }
                 }
                 if (currentPeriodEvents == null)
-                    currentPeriodEvents = mRegionViewLoader.onLoad(periodToFetch);
+                    currentPeriodEvents = regionLoader.onLoad(regionToFetch,selectedDate);
                 if (previousPeriodEvents == null)
-                    previousPeriodEvents = mRegionViewLoader.onLoad(periodToFetch - 1);
+                    previousPeriodEvents = regionLoader.onLoad(regionToFetch - 1,selectedDate);
                 if (nextPeriodEvents == null)
-                    nextPeriodEvents = mRegionViewLoader.onLoad(periodToFetch + 1);
+                    nextPeriodEvents = regionLoader.onLoad(regionToFetch + 1,selectedDate);
 
 
                 // Clear events.
@@ -801,7 +861,7 @@ public class DateRestView extends View {
                 mPreviousPeriodEvents = previousPeriodEvents;
                 mCurrentPeriodEvents = currentPeriodEvents;
                 mNextPeriodEvents = nextPeriodEvents;
-                regionPeriod = periodToFetch;
+                regionPeriod = regionToFetch;
             }
         }
 
@@ -874,6 +934,7 @@ public class DateRestView extends View {
     private void cacheEvent(Event event) {
         if (event.getStartTime()-event.getEndTime() >= 0)
             return;
+        mEventRects.add(new EventRect(event, event, null));
         /*List<Event> splitedEvents = event.splitWeekViewEvents();
         for (Event splitedEvent : splitedEvents) {
             mEventRects.add(new EventRect(splitedEvent, event, null));
@@ -990,7 +1051,7 @@ public class DateRestView extends View {
         long end1 = event1.getEndTime();
         long start2 = event2.getStartTime();
         long end2 = event2.getEndTime();
-        return !((start1 >= end2) || (end1 <= start2));
+        return event1.getTbl()==event2.getTbl()&& !((start1 >= end2) || (end1 <= start2));
     }
 
 
@@ -1140,7 +1201,7 @@ public class DateRestView extends View {
     private void drawAllDayEvents(Calendar date, float startFromPixel, Canvas canvas) {
         if (mEventRects != null && mEventRects.size() > 0) {
             for (int i = 0; i < mEventRects.size(); i++) {
-                if (isSameDay(mEventRects.get(i).event.getStartTime(), date.getTimeInMillis()) /*&& mEventRects.get(i).event.isAllDay()*/) {
+              //  if (isSameDay(mEventRects.get(i).event.getStartTime(), date.getTimeInMillis()) /*&& mEventRects.get(i).event.isAllDay()*/) {
 
                     // Calculate top.
                     float top = mHeaderRowPadding * 2 + mHeaderMarginBottom + +mTimeTextHeight / 2 + mEventMarginVertical;
@@ -1169,7 +1230,7 @@ public class DateRestView extends View {
                         drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
                     } else
                         mEventRects.get(i).rectF = null;
-                }
+                //}// isSameDay
             }
         }
     }
@@ -1340,10 +1401,10 @@ public class DateRestView extends View {
 
         /**
          * Load the events within the period
-         * @param periodIndex the period to load
+         * @param tbl the table to load
          * @return A list with the events of this period
          */
-        List<? extends Event> onLoad(int periodIndex);
+        List<? extends Event> onLoad(int tbl,Calendar date);
     }
 
 }

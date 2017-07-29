@@ -1,10 +1,12 @@
 package com.bh.olga_pc.hostess;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,7 +27,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import beans.Event;
+import com.bh.olga_pc.hostess.beans.Event;
+import com.bh.olga_pc.hostess.listeners.RecyclerViewClickListener;
+import com.bh.olga_pc.hostess.listeners.RecyclerViewTouchListener;
+
 import db.DBQuery;
 
 /**
@@ -46,6 +51,7 @@ public class CalendarCustomView extends LinearLayout {
     private Context context;
     private GridAdapter gridAdapter;
     private EventListAdapter eventAdapter;
+    private OnEventListener onEventListener;
 
     public CalendarCustomView(Context context) {
         super(context);
@@ -83,6 +89,32 @@ public class CalendarCustomView extends LinearLayout {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 linearLayoutManager.getOrientation());
         recyclerView.addItemDecoration(dividerItemDecoration);
+        recyclerView.addOnItemTouchListener(new RecyclerViewTouchListener(getContext(), recyclerView, new RecyclerViewClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Event e = eventAdapter.getValueAt(position);
+                if (onEventListener != null)
+                    onEventListener.onClick(e);
+                Toast.makeText(getContext(), e.getClient() + " is clicked!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                Event e = eventAdapter.getValueAt(position);
+                if (onEventListener != null)
+                    onEventListener.onLongClick(e);
+                Toast.makeText(getContext(), e.getClient() + " is long pressed!", Toast.LENGTH_SHORT).show();
+
+            }
+        }));
+    }
+
+    public OnEventListener getOnEventListener() {
+        return onEventListener;
+    }
+
+    public void setOnEventListener(OnEventListener onEventListener) {
+        this.onEventListener = onEventListener;
     }
 
     private void setPreviousButtonClickEvent() {
@@ -112,10 +144,7 @@ public class CalendarCustomView extends LinearLayout {
                 Date date = gridAdapter.getItem(position);
                 if (date != null) {
                     Toast.makeText(context, "Clicked " + new SimpleDateFormat("dd/MM/yyyy").format(date), Toast.LENGTH_LONG).show();
-                    gridAdapter.setSelectedDate(date);
-                    gridAdapter.notifyDataSetChanged();
-                    calendarGridView.invalidate();
-                    updateEventList(gridAdapter.getSelectedDate());
+                    setSelectedDate(date);
 
 
                 } else
@@ -123,6 +152,29 @@ public class CalendarCustomView extends LinearLayout {
 
             }
         });
+        calendarGridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                Date date = gridAdapter.getItem(position);
+                if (date != null) {
+                    setSelectedDate(date);
+                    Intent intent = new Intent(view.getContext(), DateTableActivity.class);
+                    intent.putExtra("selectedDate", date);
+                    view.getContext().startActivity(intent);
+                }
+                return true;
+            }
+
+
+        });
+    }
+
+    private void setSelectedDate(Date date) {
+        gridAdapter.setSelectedDate(date);
+        gridAdapter.notifyDataSetChanged();
+        calendarGridView.invalidate();
+        updateEventList(gridAdapter.getSelectedDate());
     }
 
     private void setUpCalendarAdapter() {
@@ -130,7 +182,7 @@ public class CalendarCustomView extends LinearLayout {
         Calendar mCal = (Calendar) cal.clone();
         mCal.set(Calendar.DAY_OF_MONTH, 1);
 
-        List<Event> events = new DBQuery.Events(context).getAllFutureEvents(mCal.get(Calendar.YEAR),mCal.get(Calendar.MONTH),1);
+        List<Event> events = new DBQuery.Events(context).getAllFutureEvents(mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), 1);
 
 
         int firstDayOfTheMonth = mCal.get(Calendar.DAY_OF_WEEK) - 1;
@@ -147,24 +199,43 @@ public class CalendarCustomView extends LinearLayout {
         updateEventList(gridAdapter.getSelectedDate());
     }
 
-    private void updateEventList(Date date){
-        Calendar cal=Calendar.getInstance();
+    private void updateEventList(Date date) {
+        Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         eventAdapter.clear();
-        eventAdapter.addAll(new DBQuery.Events(context).getCurrentDayEvents(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH)));
+        eventAdapter.addAll(new DBQuery.Events(context).getCurrentDayEvents(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)));
         eventAdapter.notifyDataSetChanged();
         recyclerView.setAdapter(eventAdapter);
 
     }
 
-    public Date getSelectedDate(){
+    public Date getSelectedDate() {
         return gridAdapter.getSelectedDate();
     }
 
-    public void addEventCalendar(Event e){
+    public void addEventCalendar(Event e) {
         gridAdapter.addEvent(e);
         gridAdapter.notifyDataSetChanged();
         eventAdapter.add(e);
         eventAdapter.notifyDataSetChanged();
+    }
+
+    public boolean updateEvent(Event e){
+        boolean fl=eventAdapter.update(e);
+        if(fl) {
+            eventAdapter.notifyDataSetChanged();
+        }
+        return fl;
+    }
+
+    //////////////////////////////////////////
+    //
+    //  Listeners
+    //
+    /////////////////////////////////////////
+    public static interface OnEventListener {
+        void onClick(Event e);
+
+        void onLongClick(Event e);
     }
 }

@@ -9,11 +9,13 @@ import android.os.Environment;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -69,7 +71,7 @@ public class Utilities {
         return today;
     }
 
-    public static String interpretTime(Context context,int hour) {
+    public static String interpretTime(Context context, int hour) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, 0);
@@ -123,18 +125,31 @@ public class Utilities {
         return f;
     }
 
-    private static class ImageFilenameFilter implements FilenameFilter {
-        private String code;
+    public static int[] getColorPalette(Context context, String tag) {
 
-        public ImageFilenameFilter(String code) {
-            this.code = code;
-        }
-
-        @Override
-        public boolean accept(File arg0, String fileName) {
-            return fileName.contains(code);
-        }
+        return new int[]{context.getColor(R.color.red), context.getColor(R.color.pink), context.getColor(R.color.magenta), context.getColor(R.color.purple),
+                context.getColor(R.color.deep_purple), context.getColor(R.color.indigo), context.getColor(R.color.blue),
+                context.getColor(R.color.light_blue), context.getColor(R.color.cyan), context.getColor(R.color.teal),
+                context.getColor(R.color.green), context.getColor(R.color.light_green), (R.color.lime),
+                context.getColor(R.color.yellow), context.getColor(R.color.amber), context.getColor(R.color.orange),
+                context.getColor(R.color.deep_orange), context.getColor(R.color.brown), context.getColor(R.color.grey),
+                context.getColor(R.color.blue_grey)};
     }
+
+
+private static class ImageFilenameFilter implements FilenameFilter {
+    private String code;
+
+    public ImageFilenameFilter(String code) {
+        this.code = code;
+    }
+
+    @Override
+    public boolean accept(File arg0, String fileName) {
+        return fileName.contains(code);
+    }
+
+}
 
     public static final int getColor(Context context, @ColorRes int id) {
         // final int version = Build.VERSION.SDK_INT;

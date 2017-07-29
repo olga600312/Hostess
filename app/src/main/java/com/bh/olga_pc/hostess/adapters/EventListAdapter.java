@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bh.olga_pc.hostess.R;
@@ -13,8 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import beans.Client;
-import beans.Event;
+import com.bh.olga_pc.hostess.beans.Client;
+import com.bh.olga_pc.hostess.beans.Event;
 
 
 /**
@@ -43,12 +42,13 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Item
         holder.tvClient.setText(client.getName());
         holder.tvPhone.setText(client.getPhone());
         holder.tvStartTime.setText(new SimpleDateFormat("HH:mm").format(event.getStartTime()));
-        holder.tvGuest.setText(""+event.getGuests());
+        holder.tvGuest.setText("" + event.getGuests());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // onItemPressed(holder.mBoundString);
+
             }
         });
     }
@@ -74,6 +74,18 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Item
         data.add(e);
     }
 
+    public boolean update(Event e) {
+       boolean fl=false;
+        int id=e.getId();
+        int i = 0, count = data.size();
+        for (; i < count && data.get(i).getId()!=id; i++) {}
+        if(i<count){
+            data.set(i,e);
+            fl=true;
+        }
+        return fl;
+    }
+
     static class ItemViewHolder extends RecyclerView.ViewHolder {
         private int mBoundString;
 
@@ -91,7 +103,8 @@ public class EventListAdapter extends RecyclerView.Adapter<EventListAdapter.Item
             tvClient = (TextView) view.findViewById(R.id.tvClient);
             tvPhone = (TextView) view.findViewById(R.id.tvPhone);
             tvStartTime = (TextView) view.findViewById(R.id.tvStartTime);
-            tvGuest=(TextView)view.findViewById(R.id.tvGst);
+            tvGuest = (TextView) view.findViewById(R.id.tvGst);
+
         }
 
 

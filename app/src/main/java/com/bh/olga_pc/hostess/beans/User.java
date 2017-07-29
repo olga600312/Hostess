@@ -1,10 +1,10 @@
-package beans;
+package com.bh.olga_pc.hostess.beans;
 
 /**
  * Created by Olga-PC on 7/1/2017.
  */
 
-public class User {
+public class User implements Cloneable{
     private int id;
     private String name;
     private int type;
@@ -40,5 +40,10 @@ public class User {
 
     public void setLogin(Login login) {
         this.login = login;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

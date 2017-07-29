@@ -7,7 +7,7 @@ package com.bh.olga_pc.hostess.tbls;
 import java.util.Calendar;
 import java.util.List;
 
-import beans.Event;
+import com.bh.olga_pc.hostess.beans.Event;
 
 public class MonthLoader implements TableViewLoader {
 

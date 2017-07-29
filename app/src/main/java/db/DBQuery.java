@@ -15,10 +15,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import beans.Client;
-import beans.Event;
-import beans.Login;
-import beans.User;
+import com.bh.olga_pc.hostess.beans.Client;
+import com.bh.olga_pc.hostess.beans.Event;
+import com.bh.olga_pc.hostess.beans.Login;
+import com.bh.olga_pc.hostess.beans.User;
 
 /**
  * Created by Olga-PC on 7/1/2017.
@@ -168,6 +168,29 @@ public class DBQuery {
             return events;
         }
 
+        public List<Event> getCurrentDayEvents(Calendar c) {
+            // I use the rawQuery here only for example that I wouldn't forget in the future
+            Calendar from = (Calendar) c.clone();
+            from.set(Calendar.HOUR_OF_DAY, 0);
+            from.set(Calendar.MINUTE, 0);
+            from.set(Calendar.SECOND, 0);
+            Calendar to = Calendar.getInstance();
+            to.setTimeInMillis(from.getTimeInMillis());
+            to.set(Calendar.HOUR_OF_DAY, 23);
+            to.set(Calendar.MINUTE, 59);
+            to.set(Calendar.SECOND, 59);
+            String query = "SELECT * FROM " + DBHelper.EVENTS.TABLE_NAME + " WHERE " + DBHelper.EVENTS.TM_START + ">=? AND " + DBHelper.EVENTS.TM_START + "<=?";
+            Cursor cursor = helper.getReadableDatabase().rawQuery(query, new String[]{
+                    "" + from.getTimeInMillis(), "" + to.getTimeInMillis()});
+            List<Event> events = new ArrayList<>();
+            if (cursor.moveToFirst()) {
+                events = getEvents(cursor);
+
+            }
+            cursor.close();
+            return events;
+        }
+
         private Date convertStringToDate(String dateInString) {
             DateFormat format = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
             Date date = null;
@@ -225,7 +248,8 @@ public class DBQuery {
                 final int clientIdColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_ID);
                 final int clientNameColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_NAME);
                 final int clientPhoneColumn = cursor.getColumnIndex(DBHelper.EVENTS.CLIENT_PHONE);
-                final int tmEventColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_START);
+                final int tmStartEventColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_START);
+                final int tmEndEventColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_END);
                 final int tmCreateColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_CREATE);
                 final int tmUpdateColumn = cursor.getColumnIndex(DBHelper.EVENTS.TM_UPDATE);
                 final int memoColumn = cursor.getColumnIndex(DBHelper.EVENTS.MEMO);
@@ -234,6 +258,7 @@ public class DBQuery {
                 final int guestsExtraColumn = cursor.getColumnIndex(DBHelper.EVENTS.GUESTS_EXTRA);
                 final int typeColumn = cursor.getColumnIndex(DBHelper.EVENTS.TYPE);
                 final int statusColumn = cursor.getColumnIndex(DBHelper.EVENTS.STATUS);
+                final int colorColumn = cursor.getColumnIndex(DBHelper.EVENTS.COLOR);
                 do {
                     Event e = new Event();
                     e.setId(cursor.getInt(idColumn));
@@ -242,7 +267,8 @@ public class DBQuery {
                     client.setName(cursor.getString(clientNameColumn));
                     client.setPhone(cursor.getString(clientPhoneColumn));
                     e.setClient(client);
-                    e.setStartTime(cursor.getLong(tmEventColumn));
+                    e.setStartTime(cursor.getLong(tmStartEventColumn));
+                    e.setEndTime(cursor.getLong(tmEndEventColumn));
                     e.setDateCreate(cursor.getLong(tmCreateColumn));
                     e.setDateUpdate(cursor.getLong(tmUpdateColumn));
                     e.setGuests(cursor.getInt(guestsColumn));
@@ -250,6 +276,7 @@ public class DBQuery {
                     e.setTbl(cursor.getInt(tblColumn));
                     e.setType(cursor.getInt(typeColumn));
                     e.setMemo(cursor.getString(memoColumn));
+                    e.setColor(cursor.getInt(colorColumn));
                     events.add(e);
                 }
                 while (cursor.moveToNext());
@@ -258,31 +285,53 @@ public class DBQuery {
         }
 
         public Event create(Event e) {
-            SQLiteDatabase database = helper.getWritableDatabase();
-            ContentValues values = new ContentValues();
             Client client = e.getClient();
+            Event event = null;
             if (client != null) {
-                //TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_START, TM_END,
-                // TM_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO
-                values.put(DBHelper.EVENTS.TYPE, e.getType());
-                values.put(DBHelper.EVENTS.CLIENT_ID, client.getId());
-                values.put(DBHelper.EVENTS.CLIENT_NAME, client.getName());
-                values.put(DBHelper.EVENTS.CLIENT_PHONE, client.getPhone());
-                values.put(DBHelper.EVENTS.TM_START, e.getStartTime());
-                values.put(DBHelper.EVENTS.TM_END, e.getEndTime());
-
-                values.put(DBHelper.EVENTS.TM_CREATE, e.getDateCreate());
-                values.put(DBHelper.EVENTS.TM_UPDATE, e.getDateUpdate());
-                values.put(DBHelper.EVENTS.USER_ID, 1);
-                values.put(DBHelper.EVENTS.TBL, e.getTbl());
-                values.put(DBHelper.EVENTS.GUESTS, e.getGuests());
-                values.put(DBHelper.EVENTS.GUESTS_EXTRA, e.getGuestsExtra());
-                values.put(DBHelper.EVENTS.STATUS, e.getStatus());
-                values.put(DBHelper.EVENTS.MEMO, e.getMemo());
+                ContentValues values = initContentValues(e, client);
+                SQLiteDatabase database = helper.getWritableDatabase();
                 database.insert(DBHelper.EVENTS.TABLE_NAME, null, values);
+                event = e;
             }
-            return e;
+            return event;
         }
+
+        public Event update(Event e) {
+            Client client = e.getClient();
+            Event event = null;
+            if (client != null) {
+                ContentValues values = initContentValues(e, client);
+                SQLiteDatabase database = helper.getWritableDatabase();
+                if (database.update(DBHelper.EVENTS.TABLE_NAME, values,  DBHelper.EVENTS.ID + "=?", new String[]{"" + e.getId()}) > 0)
+                    event = e;
+            }
+            return event;
+        }
+
+        private ContentValues initContentValues(Event e, Client client) {
+            //TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_START, TM_END,
+            // TM_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO,COLOR
+            ContentValues values = new ContentValues();
+            values.put(DBHelper.EVENTS.TYPE, e.getType());
+            values.put(DBHelper.EVENTS.CLIENT_ID, client.getId());
+            values.put(DBHelper.EVENTS.CLIENT_NAME, client.getName());
+            values.put(DBHelper.EVENTS.CLIENT_PHONE, client.getPhone());
+            values.put(DBHelper.EVENTS.TM_START, e.getStartTime());
+            values.put(DBHelper.EVENTS.TM_END, e.getEndTime());
+
+            values.put(DBHelper.EVENTS.TM_CREATE, e.getDateCreate());
+            values.put(DBHelper.EVENTS.TM_UPDATE, e.getDateUpdate());
+            values.put(DBHelper.EVENTS.USER_ID, 1);
+            values.put(DBHelper.EVENTS.TBL, e.getTbl());
+            values.put(DBHelper.EVENTS.GUESTS, e.getGuests());
+            values.put(DBHelper.EVENTS.GUESTS_EXTRA, e.getGuestsExtra());
+            values.put(DBHelper.EVENTS.STATUS, e.getStatus());
+            values.put(DBHelper.EVENTS.MEMO, e.getMemo());
+            values.put(DBHelper.EVENTS.COLOR, e.getColor());
+            return values;
+        }
+
+
     }
 
     public static class Clients {

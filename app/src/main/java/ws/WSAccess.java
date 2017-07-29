@@ -1,7 +1,7 @@
 package ws;
 
-import beans.Login;
-import beans.User;
+import com.bh.olga_pc.hostess.beans.Login;
+import com.bh.olga_pc.hostess.beans.User;
 
 /**
  * Created by Olga-PC on 7/1/2017.

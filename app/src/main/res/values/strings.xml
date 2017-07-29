@@ -45,4 +45,6 @@
     <string name="prompt_guests">Guests number</string>
     <string name="save">Save</string>
     <string name="success">Success</string>
+    <string name="color">Color</string>
+    <string name="update">Update</string>
 </resources>

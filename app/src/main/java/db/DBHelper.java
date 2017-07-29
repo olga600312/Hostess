@@ -107,6 +107,7 @@ public class DBHelper extends SQLiteOpenHelper {
         String GUESTS = "guests";
         String GUESTS_EXTRA = "guests_extra";
         String STATUS = "status";
+        String COLOR = "color";
 
 
         String TABLE_CREATE =
@@ -125,14 +126,15 @@ public class DBHelper extends SQLiteOpenHelper {
                         GUESTS + " INTEGER NOT NULL, " +
                         GUESTS_EXTRA + " INTEGER NOT NULL DEFAULT 0, " +
                         STATUS + " INTEGER NOT NULL, " +
-                        MEMO + " TEXT NOT NULL " +
+                        MEMO + " TEXT NOT NULL, " +
+                        COLOR + " INTEGER NOT NULL DEFAULT 0 " +
                         ");"+
                         " CREATE INDEX idx_name ON " + TABLE_NAME +
                         "(" + TM_START + ");"+
                         " CREATE INDEX idx_name ON " + TABLE_NAME +
                         "(" + CLIENT_ID + ");";
         public static final String[] COLUMNS = {
-                ID, TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_START, TM_END,TM_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO
+                ID, TYPE, CLIENT_ID, CLIENT_NAME, CLIENT_PHONE, TM_START, TM_END,TM_CREATE, TM_UPDATE, USER_ID, TBL, GUESTS, GUESTS_EXTRA, STATUS, MEMO,COLOR
         };
     }
 }

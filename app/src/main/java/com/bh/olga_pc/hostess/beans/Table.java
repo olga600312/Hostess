@@ -1,4 +1,4 @@
-package beans;
+package com.bh.olga_pc.hostess.beans;
 
 /**
  * Created by Olga-PC on 7/9/2017.

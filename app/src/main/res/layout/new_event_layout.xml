@@ -3,7 +3,8 @@
     android:id="@+id/activity_custom_calendar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:focusableInTouchMode="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,216 +31,239 @@
 
     </LinearLayout>
     >
+
     <ScrollView
         android:id="@+id/sv_entete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/layout_bar"
-         >
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10sp"
-        android:orientation="vertical">
+        android:layout_below="@+id/layout_bar">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/tlclient_name"
-            style="@style/LoginTilEditTextLayout"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_margin="10sp"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/client_name"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tlclient_name"
+                style="@style/LoginTilEditTextLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/client_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:hint="@string/prompt_client"
+                    android:inputType="textPersonName"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tlPhone"
+                style="@style/LoginTilEditTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:hint="@string/prompt_client"
-                android:inputType="textPersonName"
-                android:maxLines="1" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_below="@id/tlclient_name">
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/tlPhone"
-            style="@style/LoginTilEditTextLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tlclient_name">
+                <EditText
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:hint="@string/prompt_phone"
+                    android:inputType="phone"
+                    android:maxLines="1" />
 
-            <EditText
-                android:id="@+id/phone"
+            </android.support.design.widget.TextInputLayout>
+            <!-- Guests -->
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tlGuests"
+                style="@style/LoginTilEditTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:hint="@string/prompt_phone"
-                android:inputType="phone"
-                android:maxLines="1" />
+                android:layout_below="@id/tlPhone">
 
-        </android.support.design.widget.TextInputLayout>
-        <!-- Guests -->
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/tlGuests"
-            style="@style/LoginTilEditTextLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tlPhone">
+                <EditText
+                    android:id="@+id/teGuests"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:hint="@string/prompt_guests"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    android:textAlignment="viewEnd" />
 
-            <EditText
-                android:id="@+id/teGuests"
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageView
+                android:id="@+id/imgFromTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tlGuests"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/from_time"
+                android:src="@drawable/ic_schedule_black_24dp" />
+
+            <TextView
+                android:id="@+id/lblFromTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tlGuests"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@+id/imgFromTime"
+                android:shadowColor="@color/colorSubTitle"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:text="@string/begin_time"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvFromDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/lblFromTime"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/lblFromTime"
+                android:clickable="true"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/primary_text"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/lblToDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/lblFromTime"
+                android:layout_below="@+id/lblFromTime"
+                android:layout_marginTop="12dp"
+                android:shadowColor="@color/colorSubTitle"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:text="@string/end_time"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tvToDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/lblToDate"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/tvFromDate"
+                android:layout_toEndOf="@id/lblToDate"
+                android:clickable="true"
+                android:text="@string/end_time"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/primary_text"
+                android:textSize="20sp" />
+            <!-- Location -->
+            <ImageView
+                android:id="@+id/imgLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@id/tvToDate"
+                android:layout_marginTop="10dp"
+                android:contentDescription="@string/location"
+                android:src="@drawable/ic_room_black_24dp" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tlLocation"
+                style="@style/LoginTilEditTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:hint="@string/prompt_guests"
-                android:inputType="numberDecimal"
-                android:maxLines="1"
-                android:textAlignment="viewEnd" />
+                android:layout_alignStart="@id/lblToDate"
+                android:layout_below="@id/tvToDate"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/imgLocation">
 
-        </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/teLocation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:hint="@string/location"
+                    android:maxLines="1" />
+            </android.support.design.widget.TextInputLayout>
 
-        <ImageView
-            android:id="@+id/imgFromTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/tlGuests"
-            android:layout_marginTop="10dp"
-            android:contentDescription="@string/from_time"
-            android:src="@drawable/ic_schedule_black_24dp" />
 
-        <TextView
-            android:id="@+id/lblFromTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tlGuests"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_toEndOf="@+id/imgFromTime"
-            android:shadowColor="@color/colorSubTitle"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="2"
-            android:text="@string/begin_time"
-            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/btnMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignStart="@+id/tvToDate"
+                android:layout_alignTop="@id/tlLocation"
+                android:layout_below="@id/tvToDate"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@id/tlLocation"
+                android:background="@android:color/transparent"
+                android:clickable="true"
+                android:text="@string/map"
 
-        <TextView
-            android:id="@+id/tvFromDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/lblFromTime"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="10dp"
-            android:layout_toEndOf="@id/lblFromTime"
-            android:clickable="true"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/primary_text"
-            android:textSize="20sp" />
+                android:textAlignment="viewEnd"
+                android:textColor="@color/link" />
 
-        <TextView
-            android:id="@+id/lblToDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/lblFromTime"
-            android:layout_below="@+id/lblFromTime"
-            android:layout_marginTop="12dp"
-            android:shadowColor="@color/colorSubTitle"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="2"
-            android:text="@string/end_time"
-            android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/tvToDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/lblToDate"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@id/tvFromDate"
-            android:layout_toEndOf="@id/lblToDate"
-            android:clickable="true"
-            android:text="@string/end_time"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/primary_text"
-            android:textSize="20sp" />
-        <!-- Location -->
-        <ImageView
-            android:id="@+id/imgLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@id/tvToDate"
-            android:layout_marginTop="10dp"
-            android:contentDescription="@string/location"
-            android:src="@drawable/ic_room_black_24dp" />
+            <!-- Comment -->
+            <ImageView
+                android:id="@+id/imgComment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tlLocation"
+                android:layout_marginTop="22dp"
+                android:contentDescription="@string/comment"
+                android:src="@drawable/ic_comment_black_24dp" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/tlLocation"
-            style="@style/LoginTilEditTextLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@id/lblToDate"
-            android:layout_below="@id/tvToDate"
-            android:layout_marginTop="10dp"
-            android:layout_toEndOf="@id/imgLocation">
 
-            <EditText
-                android:id="@+id/teLocation"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/tlComment"
+                style="@style/LoginTilEditTextLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:hint="@string/location"
-                android:maxLines="1" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_alignStart="@id/lblToDate"
+                android:layout_below="@id/btnMap"
+                android:layout_marginTop="22dp">
 
+                <EditText
+                    android:id="@+id/tvComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/comment" />
+            </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/btnMap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignStart="@+id/tvToDate"
-            android:layout_alignTop="@id/tlLocation"
-            android:layout_below="@id/tvToDate"
-            android:layout_marginTop="10dp"
-            android:layout_toEndOf="@id/tlLocation"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:text="@string/map"
+            <!-- Color -->
+            <ImageView
+                android:id="@+id/imgColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/tlComment"
+                android:layout_marginTop="22dp"
+                android:contentDescription="@string/color"
+                android:src="@drawable/ic_color_lens_black_24dp" />
 
-            android:textAlignment="viewEnd"
-            android:textColor="@color/link" />
-
-
-        <!-- Comment -->
-        <ImageView
-            android:id="@+id/imgComment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/tlLocation"
-            android:layout_marginTop="22dp"
-            android:contentDescription="@string/comment"
-            android:src="@drawable/ic_comment_black_24dp" />
-
-
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/tlComment"
-            style="@style/LoginTilEditTextLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@id/lblToDate"
-            android:layout_below="@id/btnMap"
-            android:layout_marginTop="22dp">
-
-            <EditText
-                android:id="@+id/tvComment"
+            <Button
+                android:id="@+id/btnColorPicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/comment" />
-        </android.support.design.widget.TextInputLayout>
-    </RelativeLayout>
+                android:layout_alignStart="@id/lblToDate"
+                android:layout_below="@+id/tlComment"
+                android:layout_marginTop="22dp"
+                android:text="@string/color"
+                android:background="@color/teal"/>
+
+        </RelativeLayout>
     </ScrollView>
 </LinearLayout>
